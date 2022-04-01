@@ -52,7 +52,7 @@ def chrome_history():
     browsing_data = (cursor.fetchall())
     for record in browsing_data:
         visit_time = str(datetime.datetime(1601,1,1) \
-                         + datetime.timedelta(microseconds=record[5]))
+                         + datetime.timedelta(microseconds=record[5], hours =-5))
         if visit_time[:4] == "1601":
             pass
         else:
@@ -60,8 +60,7 @@ def chrome_history():
                 visit_time, "%Y-%m-%d %H:%M:%S.%f"))
             visit_time = visit_time[:-7]
 
-            printable = set(string.printable)
-            visit_title = filter (lambda x: x in printable, record[2])
+            visit_title = record[2]
             visit_title = visit_title.replace(",", "")
             visit_url = record[1]
 
@@ -79,11 +78,11 @@ if __name__ == "__main__":
 
     # Variables that need to be changed
     fox_db = r"/home/<local_username>/places.sqlite"
-    chrome_db = r"/home/<local_username>/History"
-    username = "<end_user_name>"
+    chrome_db = r"/home/matwed/Desktop/History"
+    username = "sward"
 
     # Function Calls - comment out the one you don't have history for
-    firefox_history()
+#    firefox_history()
     chrome_history()
 
     timeline_csv.close()
@@ -93,7 +92,7 @@ if __name__ == "__main__":
         sorted_timeline = sorted(timeline_csv, key=operator.itemgetter(0),
                                  reverse=True)
 
-    with open("timeline.csv", "wb") as f:
+    with open("timeline.csv", "w") as f:
         fileWriter = csv.writer(f, delimiter=",")
         header_row = "Artefact Timestamp", "Action", "Filename", "Full Path", \
             "User", "File Accessed", "Source", "Source File"
