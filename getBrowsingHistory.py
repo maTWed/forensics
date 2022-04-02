@@ -1,10 +1,9 @@
 #!/usr/bin/python
-# Browsing History to csv
+# getBrowsingHistory
 # by:maTWed
-# Created for internal use do to all the browsing history investigation
-# requests
+# Created for an internal need to gather browsing history for investigations
 
-# TODO: Create arg for file location & username
+# TODO: Create ability to call one function at a time
 
 import os, time, datetime, operator, string, sqlite3, csv, argparse
 
