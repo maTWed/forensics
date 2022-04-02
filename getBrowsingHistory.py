@@ -6,13 +6,10 @@
 
 # TODO: Create arg for file location & username
 
-import os, time, datetime, operator, string, sqlite3, csv
+import os, time, datetime, operator, string, sqlite3, csv, argparse
 
 
 def firefox_history():
-    global fox_db
-    global username
-    global timeline_csv
 
     db = sqlite3.connect(fox_db)
     cursor = db.cursor()
@@ -31,7 +28,7 @@ def firefox_history():
                 visit_url = saved_url[1]
 
         visit_time = str(datetime.datetime(1970,1,1)
-                        + datetime.timedelta(microseconds=record[3]))
+                        + datetime.timedelta(microseconds=record[3], hours=-4))
         visit_time = visit_time[:-7]
 
         visit_line = visit_time + "," + "Website visited (Firefox)" + "," \
@@ -40,11 +37,8 @@ def firefox_history():
         timeline_csv.write(visit_line)
     print("[+] FIREFOX HISTORY ADDED TO THE TIMELINE. \n")
 
-def chrome_history():
 
-    global chrome_db
-    global username
-    global timeline_csv
+def chrome_history():
 
     db = sqlite3.connect(chrome_db)
     cursor = db.cursor()
@@ -52,7 +46,7 @@ def chrome_history():
     browsing_data = (cursor.fetchall())
     for record in browsing_data:
         visit_time = str(datetime.datetime(1601,1,1) \
-                         + datetime.timedelta(microseconds=record[5], hours =-5))
+                         + datetime.timedelta(microseconds=record[5], hours =-4))
         if visit_time[:4] == "1601":
             pass
         else:
@@ -72,17 +66,25 @@ def chrome_history():
 
     print("[+] CHROME HISTORY ADDED TO THE TIMELINE.\n")
 
+
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Open Firefox & Chrome browsing history databases and create a csv with the data')
+    parser.add_argument('-c', '--chrome_db', type=str, metavar='', help='Chrome DB Full Path ie: /home/user/Desktop/History')
+    parser.add_argument('-f', '--fox_db', type=str, metavar='', help='Firefox DB Full Path ie: /home/user/Desktop/History')
+    parser.add_argument('-u', '--username', type=str, metavar='', help='Username of the data owner')
+    args = parser.parse_args()
 
     timeline_csv = open("timeline.csv", "a")
 
-    # Variables that need to be changed
-    fox_db = r"/home/<local_username>/places.sqlite"
-    chrome_db = r"/home/matwed/Desktop/History"
-    username = "sward"
+    # Variables
+    fox_db = args.fox_db
+    chrome_db = args.chrome_db
+    username = args.username
 
-    # Function Calls - comment out the one you don't have history for
-#    firefox_history()
+    # Function Calls
+    
+    firefox_history()
     chrome_history()
 
     timeline_csv.close()
