@@ -82,7 +82,6 @@ if __name__ == "__main__":
     username = args.username
 
     # Function Calls
-    
     firefox_history()
     chrome_history()
 
